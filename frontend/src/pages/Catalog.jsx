@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 
+// Tus productos reales con tus precios y fotos exactas
 const PRODUCTOS_INICIALES = [
   {
     id: 1,
@@ -26,21 +27,26 @@ const PRODUCTOS_INICIALES = [
 ];
 
 export default function Catalog() {
+  // Inicializamos directamente con tus productos para que NUNCA salga el error de fetch en Vercel
   const [productos, setProductos] = useState(PRODUCTOS_INICIALES);
   const cartContext = useCart();
   const addToCart = cartContext?.addToCart;
 
   useEffect(() => {
+    // Intenta buscar en local si estás en tu PC, si falla en Vercel no rompe nada
     fetch('http://localhost:8080/api/productos')
       .then(res => {
-        if (!res.ok) throw new Error("API offline");
+        if (!res.ok) throw new Error("API local no disponible");
         return res.json();
       })
       .then(data => {
-        if (data && data.length > 0) setProductos(data);
+        if (data && data.length > 0) {
+          setProductos(data);
+        }
       })
       .catch(() => {
-        console.log("Cargando catálogo estático de respaldo para Vercel.");
+        // En Vercel fallará silenciosamente y mantendrá tus PRODUCTOS_INICIALES impecables
+        console.log("Modo producción Vercel: usando catálogo integrado.");
       });
   }, []);
 
@@ -69,7 +75,10 @@ export default function Catalog() {
                   $ {precioFinal.toLocaleString()} COP
                 </p>
                 <button 
-                  onClick={() => addToCart && addToCart(prod)} 
+                  onClick={() => {
+                    if (addToCart) addToCart(prod);
+                    alert(`¡${prod.nombre} agregado al carrito!`);
+                  }} 
                   style={{ width: '100%', padding: '12px', backgroundColor: '#22c55e', color: '#000', fontWeight: '800', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '15px' }}
                 >
                   Agregar al Carrito
