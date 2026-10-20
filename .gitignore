@@ -4,3 +4,6 @@ target/
 .idea/
 .vscode/
 *.log
+.env
+.env.*
+emotion_db*.sql

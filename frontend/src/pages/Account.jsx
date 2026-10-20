@@ -24,7 +24,7 @@ export default function Account() {
 
   useEffect(() => {
     if (user?.id) {
-      fetch(`http://localhost:8080/api/pedidos/cliente/${user.id}`)
+      fetch(`/api/pedidos/cliente/${user.id}`)
         .then((res) => (res.ok ? res.json() : []))
         .then((data) => {
           setPedidos(data);
@@ -41,7 +41,7 @@ export default function Account() {
     setMensaje('');
 
     try {
-      const response = await fetch('http://localhost:8080/api/clientes/login', {
+      const response = await fetch('/api/clientes/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: emailLogin, password: passwordLogin })
@@ -111,7 +111,7 @@ export default function Account() {
     setError('');
 
     try {
-      const response = await fetch(`http://localhost:8080/api/clientes/${user.id}`, {
+      const response = await fetch(`/api/clientes/${user.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre, telefono, direccion })
@@ -138,7 +138,7 @@ export default function Account() {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/api/clientes/cambiar-password/${user.id}`, {
+      const response = await fetch(`/api/clientes/cambiar-password/${user.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: passwordNueva })
@@ -159,7 +159,7 @@ export default function Account() {
     if (!window.confirm('¿Estás segura de que deseas cancelar tu cuenta en e-Motion?')) return;
 
     try {
-      const response = await fetch(`http://localhost:8080/api/clientes/${user.id}`, { method: 'DELETE' });
+      const response = await fetch(`/api/clientes/${user.id}`, { method: 'DELETE' });
       if (response.ok) {
         alert('Cuenta eliminada correctamente.');
         logout();

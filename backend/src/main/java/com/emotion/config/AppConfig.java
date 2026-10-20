@@ -1,5 +1,6 @@
 package com.emotion.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
@@ -9,12 +10,17 @@ import org.springframework.web.servlet.config.annotation.*;
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
 
-    /** Permite que React (Vite, puerto 5173) consuma la API. */
+    /** Orígenes permitidos, separados por coma. En Railway se define con APP_CORS_ORIGINS. */
+    @Value("${app.cors.origins:http://localhost:5173,http://127.0.0.1:5173}")
+    private String[] origins;
+
+    /** Permite que el frontend (local o Vercel) consuma la API. */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:5173", "http://127.0.0.1:5173")
-                .allowedMethods("GET", "POST", "PUT", "DELETE");
+                .allowedOrigins(origins)
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*");
     }
 
     /** Cliente HTTP para consumir APIs externas (tasa de cambio, pasarelas). */
