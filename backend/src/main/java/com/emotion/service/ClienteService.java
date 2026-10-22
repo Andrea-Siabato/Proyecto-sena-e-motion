@@ -25,4 +25,10 @@ public class ClienteService {
             .filter(c -> encoder.matches(password, c.passwordHash()))
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales inválidas"));
     }
+
+    public void actualizarPassword(Long id, String nuevaPassword) {
+        int filas = repo.updatePassword(id, encoder.encode(nuevaPassword));
+        if (filas == 0)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");
+    }
 }
