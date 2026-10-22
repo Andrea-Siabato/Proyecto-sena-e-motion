@@ -26,4 +26,10 @@ public class ClienteRepository {
             c.nombre(), c.email(), c.passwordHash(), c.telefono(), c.direccion());
     }
     public int update(long id, String nombre, String telefono, String direccion) {
-        return jdbc.update("UPDATE
+        return jdbc.update("UPDATE clientes SET nombre=?, telefono=?, direccion=? WHERE id=?", nombre, telefono, direccion, id);
+    }
+    public int updatePassword(long id, String passwordHash) {
+        return jdbc.update("UPDATE clientes SET password_hash=? WHERE id=?", passwordHash, id);
+    }
+    public int delete(long id) { return jdbc.update("DELETE FROM clientes WHERE id=?", id); }
+}
